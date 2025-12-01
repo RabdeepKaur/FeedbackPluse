@@ -1,13 +1,13 @@
-import { NextResponse } from "next/server";
+import { NextResponse,NextRequest } from "next/server";
 import { GoogleGenAI } from "@google/genai";
 
 const client = new GoogleGenAI({
   apiKey: process.env.GOOGLE_GEMINI_API_KEY,
 });
 
-export async function POST(message:string, req: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const { message } = await req.json();
+    const { message } = await request.json();
 
     const completion = await client.chat.completions.create({
       model: "gpt-4o-mini",
