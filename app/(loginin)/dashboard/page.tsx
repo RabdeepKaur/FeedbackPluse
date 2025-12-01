@@ -4,6 +4,16 @@ import { auth } from '@/lib/auth';
 import Link from 'next/link';
 import { getUserProjects } from '@/app/action/project';
 
+export type DashboardProject = {
+  id: string;
+  name: string;
+  projectKey: string;
+  createdAt: Date;
+  isActive: boolean;
+  _count: {
+    feedback: number;
+  };
+};
 export default async function DashboardPage() {
   const user = await auth.getUser();
 
@@ -36,7 +46,7 @@ const { projects, error } = await getUserProjects();
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects && projects.length > 0 ? (
-            projects.map((project) => (
+            projects.map(( project: DashboardProject) => (
               <Link
                 key={project.id}
                 href={`/dashboard/project/${project.id}`}
