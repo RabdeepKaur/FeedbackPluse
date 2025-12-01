@@ -2,7 +2,7 @@
 
 import prisma from '@/lib/prisma';
 import { auth } from '@/lib/auth';
-import { FeedbackType } from '@prisma/client';
+import { FeedbackType } from  "@prisma/client";
 import { revalidatePath } from 'next/cache';
 
 export async function getProjectFeedback(
