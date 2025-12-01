@@ -1,8 +1,11 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-
-export default function FeedbackFilters() {
+type FeedbackFilterspromps = {
+  selectedType: string;
+  selectedSentiment: string;
+};
+export default function FeedbackFilters({ selectedType, selectedSentiment }: FeedbackFilterspromps)  {
   const router = useRouter();
   const searchParams = useSearchParams();
   
@@ -35,6 +38,7 @@ export default function FeedbackFilters() {
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Type Filter */}
+
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Feedback Type
