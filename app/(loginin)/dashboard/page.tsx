@@ -1,8 +1,9 @@
-// app/dashboard/page.tsx - Use the auth helper from lib/auth.ts
+export const dynamic = 'force-dynamic';
 import { redirect } from 'next/navigation';
 import { auth } from '@/lib/auth';
 import Link from 'next/link';
 import { getUserProjects } from '@/app/action/project';
+import { cookies } from 'next/headers';
 
 export type DashboardProject = {
   id: string;
