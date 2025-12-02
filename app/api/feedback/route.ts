@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
     const origin = request.headers.get('origin');
     if (project.allowedDomains.length > 0 && origin) {
       const originDomain = new URL(origin).hostname;
-      const isAllowed = project.allowedDomains.some(domain => {
+      const isAllowed = project.allowedDomains.some((domain:string) => {
         return originDomain === domain || originDomain.endsWith(`.${domain}`);
       });
 
