@@ -2,13 +2,14 @@
 
 import prisma from '@/lib/prisma';
 import { auth } from '@/lib/auth';
-import { FeedbackType, SentimentType } from ".prisma/client";
 import { revalidatePath } from 'next/cache';
+
+type SentimentType = 'POSITIVE' | 'NEGATIVE' | 'NEUTRAL';
 
 export async function getProjectFeedback(
   projectId: string,
   filters?: {
-    type?: FeedbackType;
+    type?: 'BUG' | 'FEATURE' | 'OTHER';
     isRead?: boolean;
     sentiment?: SentimentType;
   }
