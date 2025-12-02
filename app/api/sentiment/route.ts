@@ -1,37 +1,44 @@
-import { NextResponse,NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenAI } from "@google/genai";
 
-const client = new GoogleGenAI({
-  apiKey: process.env.GOOGLE_GEMINI_API_KEY,
-});
+const client = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
 
 export async function POST(request: NextRequest) {
   try {
     const { message } = await request.json();
 
-    const completion = await client.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "system",
-          content:
-            "You are a sentiment analyzer. Respond with only one word: POSITIVE, NEGATIVE, or NEUTRAL. Analyze the sentiment of the feedback message.",
-        },
-        {
-          role: "user",
-          content: `Analyze the sentiment of the following message: "${message}"`,
-        },
-      ],
-      max_tokens: 2,
+    if (!message || message.trim().length === 0) {
+      return NextResponse.json(
+        { error: "Message is required" },
+        { status: 400 }
+      );
+    }
+
+    const prompt = `You are a sentiment analyzer. Respond with only one word: POSITIVE, NEGATIVE, or NEUTRAL.
+
+Analyze the sentiment of the following message: "${message}"
+
+Sentiment:`;
+
+    const result = await client.models.generateContent({
+      model: "gemini-2.0-flash-exp",
+      contents: prompt,
     });
 
-    const sentiment = completion.choices[0].message.content
-      ?.trim()
-      .toLowerCase();
+    const sentiment = result.text?.trim().toUpperCase() || 'NEUTRAL';
 
-    return NextResponse.json({ sentiment });
+    // Validate response is one of the expected values
+    const validSentiments = ['POSITIVE', 'NEGATIVE', 'NEUTRAL'];
+    const finalSentiment = validSentiments.includes(sentiment) 
+      ? sentiment 
+      : 'NEUTRAL';
+
+    return NextResponse.json({ sentiment: finalSentiment });
   } catch (err) {
-    console.error(err);
-    return NextResponse.json({ sentiment: "POSITIVE" });
+    console.error('Sentiment analysis error:', err);
+    return NextResponse.json(
+      { sentiment: "NEUTRAL", error: "Failed to analyze sentiment" },
+      { status: 200 } // Return 200 with default sentiment instead of error
+    );
   }
 }
