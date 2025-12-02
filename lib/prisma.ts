@@ -1,6 +1,9 @@
-import { PrismaClient } from '@prisma/client';
+import type { PrismaClient as PrismaClientType } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { Pool } from 'pg';
+
+// Use static import instead of require to avoid forbidden require() style import
+import { PrismaClient } from '@prisma/client';
 
 const prismaClientSingleton = () => {
   const pool = new Pool({
@@ -12,7 +15,7 @@ const prismaClientSingleton = () => {
   return new PrismaClient({
     adapter,
     log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
-  });
+  }) as PrismaClientType;
 };
 
 declare global {
