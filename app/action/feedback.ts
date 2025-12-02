@@ -2,7 +2,7 @@
 
 import prisma from '@/lib/prisma';
 import { auth } from '@/lib/auth';
-import { FeedbackType } from  "@prisma/client";
+import { FeedbackType, SentimentType } from "@prisma/client";
 import { revalidatePath } from 'next/cache';
 
 export async function getProjectFeedback(
@@ -10,7 +10,7 @@ export async function getProjectFeedback(
   filters?: {
     type?: FeedbackType;
     isRead?: boolean;
-    sentiment?: string;
+    sentiment?: SentimentType;
   }
 ) {
   try {
@@ -19,7 +19,7 @@ export async function getProjectFeedback(
         projectId,
         ...(filters?.type && { type: filters.type }),
         ...(filters?.isRead !== undefined && { isRead: filters.isRead }),
-        ...(filters?.sentiment && { sentiment: filters.sentiment as any }),
+        ...(filters?.sentiment && { sentiment: filters.sentiment }),
       },
       include: {
         labels: {
@@ -98,8 +98,14 @@ export async function analyzeSentiment(feedbackId: string) {
       sentiment: updated.sentiment,
       score: updated.sentimentScore,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Analyze sentiment error:', error);
-    return { error: error.message || 'Failed to analyze sentiment' };
+    const message =
+      error instanceof Error
+        ? error.message
+        : typeof error === 'string'
+        ? error
+        : 'Failed to analyze sentiment';
+    return { error: message };
   }
 }
