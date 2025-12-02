@@ -1,6 +1,8 @@
-import * as client from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { Pool } from 'pg';
+
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { PrismaClient } = require('@prisma/client');
 
 const prismaClientSingleton = () => {
   const pool = new Pool({
@@ -9,7 +11,7 @@ const prismaClientSingleton = () => {
   
   const adapter = new PrismaPg(pool);
   
-  return new client.PrismaClient({
+  return new PrismaClient({
     adapter,
     log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
   });
