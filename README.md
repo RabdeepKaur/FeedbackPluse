@@ -2,6 +2,10 @@ Feedbackpluse
 
 A lightweight feedback collection system featuring a cross-site embeddable widget, Firebase authentication, a Next.js dashboard, and PostgreSQL storage.
 
+
+https://github.com/user-attachments/assets/9ec4d486-2739-46c2-b5a9-7a9ef108d4e1
+
+
 Features
 
 Authentication
